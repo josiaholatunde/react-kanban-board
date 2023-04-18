@@ -5,7 +5,7 @@ import { DndContext, rectIntersection  } from "@dnd-kit/core";
 import { Card } from 'react-bootstrap';
 import { AddStageColumn } from './AddStageColumn';
 import { connect, ConnectedProps, useDispatch } from 'react-redux';
-import { addCardItemToStage, addNewStage, removeTaskItemFromPreviousStage } from '../../redux/actions/kabanStageActions';
+import { addCardItemToStage, addNewStage, removeTaskItemFromPreviousStage, renameStage } from '../../redux/actions/kabanStageActions';
 import { RootState } from '../../redux/store';
 import './kanban.css';
 import { toast } from 'react-toastify';
@@ -44,8 +44,8 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
     const addStage = (newStage: any) => {
 
         dispatch(addNewStage(newStage, () => {
-            if (kabanStages.length === MAX_COLUMNS_TO_BE_CREATED) 
-            return toast.info('You have reached the max number of columns that can be created')
+            // check if no of stages created is one less than the max(4) since this update was successful. Another approach would be to check the store state for the exact count
+            if (kabanStages.length === MAX_COLUMNS_TO_BE_CREATED - 1) return toast.info('You have reached the max number of columns that can be created')
         }))
         setShouldRenderAddStageColumn(false);
     }
@@ -68,6 +68,15 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
             </Card>
     }
 
+    const handleRenameStage = (stageName: any, callBack: any) => {
+        console.log('Noba', stageName);
+        if (doesStageNamePreviouslyExist(stageName.name)) {
+            return toast.error('Stage name has been taken');
+        }
+        dispatch(renameStage(stageName, callBack))
+      
+    }
+
 
     return <div className="container my-5">
         <h2>Welcome to Kanban board</h2>
@@ -76,7 +85,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
                 <div className='d-flex flex-wrap' style={{ rowGap: '1.5rem'}} >
                     {
                         kabanStages.map((stageItem, index) => 
-                        <KanbanStageColumn key={index} stageItem={stageItem}  />)
+                        <KanbanStageColumn key={index} stageItem={stageItem} renameStage={handleRenameStage}  />)
                     }
                     <div> { displayAdditionalKabanContent() } </div>
                  </div>

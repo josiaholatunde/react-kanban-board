@@ -26,6 +26,9 @@ input[type="color"]:focus,
   background-color: #5368d2 !important;
   border-color: #5368d2 !important ;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .primary-text {

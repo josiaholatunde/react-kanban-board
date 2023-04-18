@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { KanbanStage } from '../../types/KanbanStage';
-import { ActionTypes, ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, REMOVE_TASK_ITEM_FROM_STAGE } from './types';
+import { ActionTypes, ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE } from './types';
 type AuthDispatch<T = unknown, S = unknown> = ThunkDispatch<T, S, Action<ActionTypes>>;
 
 
@@ -16,6 +16,28 @@ export const addCardItemToStage = (stageName: string, taskItem: any) => (dispatc
         name: stageName,
         taskItem
     }});
+};
+
+export const renameStage = ( stageItem: any, callback?: any) => (dispatch: AuthDispatch) => {
+    dispatch({ type: RENAME_STAGE, payload: {
+        previous: stageItem.previousStageName,
+        current: stageItem.name
+    }});
+    if (callback) callback()
+};
+
+export const deleteStage = ( stageName: any, callback?: any) => (dispatch: AuthDispatch) => {
+    dispatch({ type: DELETE_STAGE, payload: {
+       name: stageName
+    }});
+    if (callback) callback()
+};
+
+export const clearStage = ( stageName: any, callback?: any) => (dispatch: AuthDispatch) => {
+    dispatch({ type: CLEAR_STAGE, payload: {
+       name: stageName
+    }});
+    if (callback) callback()
 };
 
 

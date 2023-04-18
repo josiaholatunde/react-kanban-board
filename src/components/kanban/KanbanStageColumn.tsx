@@ -7,20 +7,30 @@ import getItem from '../../util/menu';
 import { MoreOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { AddCard } from './AddCard';
 import { useDispatch } from 'react-redux';
-import { addCardItemToStage } from '../../redux/actions/kabanStageActions';
+import { addCardItemToStage, clearStage, deleteStage } from '../../redux/actions/kabanStageActions';
 import { useDroppable } from "@dnd-kit/core";
 import './kanban.css';
+import { RenameStageForm } from './RenameStageForm';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 
 type KanbanStageColumnProps = {
     stageItem: KanbanStage;
+    renameStage: (taskItem: any, callBack?: Function) => void
 }
-export const KanbanStageColumn: React.FC<KanbanStageColumnProps> = ({ stageItem: { name, taskItems } }) => {
-    const [shouldDisplayAddCardForm, setShouldDisplayAddCardForm] = useState(false);
+
+enum FooterAction {
+    DISPLAY_ADD_CARD_FORM,
+    DISPLAY_ADD_CARD_BUTTON,
+    DISPLAY_RENAME_STAGE_FORM
+}
+export const KanbanStageColumn: React.FC<KanbanStageColumnProps> = ({ stageItem: { name, taskItems }, renameStage }) => {
+    const [footerAction, setFooterAction] = useState<FooterAction>(FooterAction.DISPLAY_ADD_CARD_BUTTON);
     const contentMoreOverlay = (name: string) => <Menu items={[
-        getItem(<div onClick={() => renameStage(name)} > Rename </div>, '1'),
-        getItem(<div onClick={() => clearStage(name)} > Clear </div>, '2'),
-        getItem(<div onClick={() => deleteStage(name)} > Delete </div>, '3'),
+        getItem(<div onClick={() => handleDisplayRenameStage(name)} > Rename </div>, '1'),
+        getItem(<div onClick={() => handleClearStage(name)} > Clear </div>, '2'),
+        getItem(<div onClick={() => handleDeleteStage(name)} > Delete </div>, '3'),
       ]} />
       const { setNodeRef } = useDroppable({
         id: name,
@@ -28,21 +38,73 @@ export const KanbanStageColumn: React.FC<KanbanStageColumnProps> = ({ stageItem:
 
       const dispatch = useDispatch()
 
-      const renameStage = (name: string) => {}
-      const clearStage = (name: string) => {}
-      const deleteStage = (name: string) => {}
+      const handleDisplayRenameStage = (name: string) => {
+        setFooterAction(FooterAction.DISPLAY_RENAME_STAGE_FORM)
+      }
+      const handleClearStage = (name: string) => {
+        return Swal.fire({
+            title: '<strong style="color: #f01d1d">Clear Items</strong>',
+            text: `Are you sure you want to clear all the items in this stage with name ${name}?`,
+            icon: 'error',
+            confirmButtonColor: '#f01d1d',
+            confirmButtonText: `Yes`,
+            showCancelButton: true,
+        }).then(async (results: any) => {
+            if (results.value) {
+                dispatch(clearStage(name, () => {
+                    toast.success('Successfully cleared stage');
+                }))
+            }
+        });
+      }
+      const handleDeleteStage = (name: string) => {
+        return Swal.fire({
+            title: '<strong style="color: #f01d1d">Delete Kanban Board Stage</strong>',
+            text: `Are you sure you want to delete stage with name ${name}?`,
+            icon: 'error',
+            confirmButtonColor: '#f01d1d',
+            confirmButtonText: `Yes`,
+            showCancelButton: true,
+        }).then(async (results: any) => {
+            if (results.value) {
+                dispatch(deleteStage(name, () => {
+                    toast.success('Successfully deleted stage');
+                }))
+            }
+        });
+       
+      }
 
       const handleRenderAddCard = () => {
-        setShouldDisplayAddCardForm(true);
+        setFooterAction(FooterAction.DISPLAY_ADD_CARD_FORM);
       }
 
       const handleCancelAddCardToStage = () => {
-        setShouldDisplayAddCardForm(false);
+        setFooterAction(FooterAction.DISPLAY_ADD_CARD_BUTTON);
+      }
+
+      const handleCancelRenameStage = () => {
+        setFooterAction(FooterAction.DISPLAY_ADD_CARD_BUTTON);
       }
 
       const handleAddCardToStage = (taskItem: any) => {
         dispatch(addCardItemToStage(name, taskItem));
-        setShouldDisplayAddCardForm(false);
+        setFooterAction(FooterAction.DISPLAY_ADD_CARD_BUTTON);
+      }
+
+
+      const renderFooter = () => {
+        switch (footerAction) {
+            case FooterAction.DISPLAY_ADD_CARD_FORM:
+                return <AddCard stageName={name} addCardToStage={handleAddCardToStage} handleCancelAddCardToStage={handleCancelAddCardToStage} />
+                case FooterAction.DISPLAY_RENAME_STAGE_FORM:
+                    return <RenameStageForm stageName={name} handleCancelRenameStage={handleCancelRenameStage} renameStage={(e, callback) => {
+                        renameStage(e, callback);
+                        setFooterAction(FooterAction.DISPLAY_ADD_CARD_BUTTON);
+                    }} />
+            default:
+                return renderAddCardButton()
+        }
       }
 
       const renderAddCardButton = () => {
@@ -63,7 +125,7 @@ export const KanbanStageColumn: React.FC<KanbanStageColumnProps> = ({ stageItem:
         
             </Card.Body>
             <Card.Footer className="bg-white text-center"  > 
-                { shouldDisplayAddCardForm ? <AddCard stageName={name} addCardToStage={handleAddCardToStage} handleCancelAddCardToStage={handleCancelAddCardToStage} /> : renderAddCardButton() } 
+                { renderFooter() }
             </Card.Footer>
     </Card>
     </div>

@@ -14,7 +14,8 @@ export const AddStageColumn: React.FC<AddCardProps> = ({ addStage, handleCancelA
     const [stageName, setStageName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleAddStage = () => {
+    const handleAddStage = (event: any) => {
+        event.preventDefault();
         if (isFormInvalid()) {
             return toast.error('Fill in the stage name field')
         } else if (doesStageNamePreviouslyExist(stageName)) {
