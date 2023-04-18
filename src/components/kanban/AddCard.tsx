@@ -2,24 +2,24 @@ import React, { useState } from 'react';
 import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import FormInputField from '../form/FormInputField';
 import { toast } from 'react-toastify';
-
+import { v4 as uuid } from 'uuid';
 
 type AddCardProps = {
+    stageName: string,
     addCardToStage: (taskItem: any, callBack?: Function) => void
     handleCancelAddCardToStage: () => void
 }
 
-export const AddCard: React.FC<AddCardProps> = ({ addCardToStage, handleCancelAddCardToStage }) => {
+export const AddCard: React.FC<AddCardProps> = ({ addCardToStage, handleCancelAddCardToStage, stageName }) => {
     const [title, setTitle] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
 
     const handleAddCardToStage = () => {
         if (isFormInvalid()) {
             toast.error('Fill in the title field')
         } else {
             setIsSubmitting(true);
-            addCardToStage({ title }, () => {
+            addCardToStage({ title, id:  uuid(), currentStage: stageName }, () => {
                 toast.success('Successfully added card to stage');
             })
         }

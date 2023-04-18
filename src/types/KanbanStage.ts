@@ -2,6 +2,6 @@ import { KanbanStageItem } from "./KanbanStageItem";
 
 
 export type KanbanStage = {
-    title: string;
+    name: string;
     taskItems: KanbanStageItem[];
 }

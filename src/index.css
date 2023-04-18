@@ -25,6 +25,7 @@ input[type="color"]:focus,
 .primary-btn {
   background-color: #5368d2 !important;
   border-color: #5368d2 !important ;
+  cursor: pointer;
 }
 
 .primary-text {
@@ -33,4 +34,8 @@ input[type="color"]:focus,
 
 .custom-btn {
   width: 4.5rem !important;
+}
+
+.pointer {
+  cursor: pointer;
 }
