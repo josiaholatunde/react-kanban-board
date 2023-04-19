@@ -18,9 +18,15 @@ export const RenameStageForm: React.FC<AddCardProps> = ({ renameStage, handleCan
         if (isFormInvalid()) {
             toast.error('Fill in the title field')
         } else {
+            //handles the case where the previous stage name is same as the current stage name
+            // return success response and abort flow else validate if name belongs to another stage
+            if (name.trim() === stageName) {
+                handleCancelRenameStage();
+                return toast.success('Successfully renamed stage'); 
+            }
             setIsSubmitting(true);
             renameStage({ name,  previousStageName: stageName }, () => {
-                toast.success('Successfully added card to stage');
+                toast.success('Successfully renamed stage');
             })
         }
     }

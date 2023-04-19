@@ -1,8 +1,8 @@
-.stage-card:nth-child(3n+1) { 
+.stage-card:nth-child(4n-3) { 
     margin-left: 0 !important;
 }
 
-.stage-card .card {
+.stage-card {
     width: 270px;  
 }
 

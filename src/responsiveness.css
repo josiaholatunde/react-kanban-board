@@ -4,12 +4,13 @@
         padding: 2rem !important;
     }
 
-    .stage-card .card {
+    .stage-card {
         width: 18.75rem;
+        margin-left: 0 !important;
     }
 
-    .stage-card {
-        margin-left: 0 !important;
-        
+
+    .stage-card .card {
+      width: 100%;  
     }
 }
