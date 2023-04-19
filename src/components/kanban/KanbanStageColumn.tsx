@@ -4,7 +4,7 @@ import { KanbanStage } from '../../types/KanbanStage';
 import { KanbanStageTaskItem } from './KanbanStageTaskItem';
 import { Menu, Dropdown } from 'antd'
 import getItem from '../../util/menu';
-import { MoreOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { MoreOutlined } from '@ant-design/icons';
 import { AddCard } from './AddCard';
 import { useDispatch } from 'react-redux';
 import { addCardItemToStage, clearStage, deleteStage } from '../../redux/actions/kabanStageActions';
@@ -27,6 +27,7 @@ enum FooterAction {
 }
 export const KanbanStageColumn: React.FC<KanbanStageColumnProps> = ({ stageItem: { name, taskItems }, renameStage }) => {
     const [footerAction, setFooterAction] = useState<FooterAction>(FooterAction.DISPLAY_ADD_CARD_BUTTON);
+
     const contentMoreOverlay = (name: string) => <Menu items={[
         getItem(<div onClick={() => handleDisplayRenameStage(name)} > Rename </div>, '1'),
         getItem(<div onClick={() => handleClearStage(name)} > Clear </div>, '2'),

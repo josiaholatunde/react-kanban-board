@@ -1,9 +1,16 @@
 .stage-card:nth-child(3n+1) { 
     margin-left: 0 !important;
- }
+}
 
+.kaban-stage-container {
+    row-gap: 1.5rem;
+}
 
- .draggable {
+.draggable {
     top: auto !important;
     left: auto !important;
-  }
+}
+
+.add-column {
+   width: 250px;
+}

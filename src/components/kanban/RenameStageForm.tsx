@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import FormInputField from '../form/FormInputField';
 import { toast } from 'react-toastify';
-import { v4 as uuid } from 'uuid';
 
 type AddCardProps = {
     stageName: string,
@@ -40,7 +39,7 @@ export const RenameStageForm: React.FC<AddCardProps> = ({ renameStage, handleCan
                         onChange={(ev) => setStageName(ev.target.value)}
                 />
                 <div className='d-flex justify-content-between align-items-center'>
-                    <a className='primary-text' onClick={handleCancelRenameStage}>Cancel</a>
+                    <div className='primary-text' onClick={handleCancelRenameStage}>Cancel</div>
                     <Button type="submit" className="custom-btn primary-btn" disabled={isFormInvalid()}>
                         {!isSubmitting ? 'Rename' : <Spinner animation="grow" className="mt-1" /> }
                     </Button>

@@ -31,6 +31,10 @@ input[type="color"]:focus,
   justify-content: center;
 }
 
+.primary-bg {
+  background-color: #5368d2 !important;
+}
+
 .primary-text {
   color: #5368d2 !important;
 }
@@ -41,4 +45,8 @@ input[type="color"]:focus,
 
 .pointer {
   cursor: pointer;
+}
+
+.text-light {
+  color: #fff;
 }

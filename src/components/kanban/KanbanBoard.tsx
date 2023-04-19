@@ -16,10 +16,13 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
 
     const [shouldRenderAddStageColumn, setShouldRenderAddStageColumn] = useState(false);
     const dispatch = useDispatch();
-    const MAX_COLUMNS_TO_BE_CREATED = 5;
+    // default value for the max no of columns to be created. 
+    // This allows for flexibility with modifying the default without carrying out separate deployments
+    const MAX_COLUMNS_TO_BE_CREATED = Number(process.env.MAX_COLUMNS_TO_BE_CREATED) || 5;
 
     const handleOnDragEnd = (e: any) => {
-        console.log('Omo', e);
+        // get destination stage, check for its validity and add current task item to destination as well as remove same task from existing stage to prevent duplicates
+        // also handle edge cases where destination is same as current stage or destination is invalid due to the user moving the mouse out of draggable scope
         const destination  = e.over?.id;
         const taskItemTitle = e.active.data.current?.title ?? "";
         const taskItemPrevStage = e.active.data.current?.currentStage;
@@ -40,7 +43,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
     }
 
     const renderAddColumnButton = () => {
-       return <a className='primary-text pointer' onClick={handleRenderStageColumn}>Add Column</a>
+       return <div className='primary-text pointer' onClick={handleRenderStageColumn}>Add Column</div>
     }
 
     const addStage = (newStage: any) => {
@@ -61,8 +64,8 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
     }
 
     const displayAdditionalKabanContent = () => {
-        if (kabanStages.length == MAX_COLUMNS_TO_BE_CREATED) return <></>;
-        return <Card className="content-cardbody" style={{ width: '250px' }}>
+        if (kabanStages.length === MAX_COLUMNS_TO_BE_CREATED) return <></>;
+        return <Card className="content-cardbody add-column">
                 <Card.Body>
                    { shouldRenderAddStageColumn ? <AddStageColumn doesStageNamePreviouslyExist={doesStageNamePreviouslyExist} addStage={addStage} handleCancelAddStage={handleCancelAddStage} /> : 
                    renderAddColumnButton() } 
@@ -71,7 +74,6 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
     }
 
     const handleRenameStage = (stageName: any, callBack: any) => {
-        console.log('Noba', stageName);
         if (doesStageNamePreviouslyExist(stageName.name)) {
             return toast.error('Stage name has been taken');
         }
@@ -80,11 +82,13 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
     }
 
     useEffect(() => {
+        // when the app loads or browser is refreshed, initialize kanban stages with default or from local storage
+        // should ideally be from a remote server
         dispatch(fetchAllKanbanStages());
     }, [])
 
 
-    return <div className="container my-5">
+    return <div className="container my-5 p-0">
         <h2>Welcome to Safaricom Kanban board</h2>
            <div className='my-5'>
             <Breadcrumb separator=">">
@@ -94,7 +98,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
            </div>
             <BlockUi blocking={false}>
                 <DndContext collisionDetection={rectIntersection} onDragEnd={handleOnDragEnd}>
-                    <div className='row' style={{ rowGap: '1.5rem'}} >
+                    <div className='row kaban-stage-container'>
                         {
                             kabanStages.map((stageItem: any, index: number) => 
                             <KanbanStageColumn key={index} stageItem={stageItem} renameStage={handleRenameStage}  />)

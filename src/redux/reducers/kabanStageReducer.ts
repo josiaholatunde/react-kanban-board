@@ -19,7 +19,7 @@ const initialState: KabanStageReducerState = {
     ]
 }
 
-export default function (state = initialState, action: PayloadAction<any>) {
+export default function kabanStageReducer(state = initialState, action: PayloadAction<any>) {
     let nextState;
     switch (action.type) {
         

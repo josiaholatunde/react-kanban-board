@@ -22,7 +22,7 @@ root.render(
   </React.StrictMode>
 );
 
-
+// registers the service worker script on the user's device and executes depdending on the current service worker life cycle
 serviceWorkerRegistration.register();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
