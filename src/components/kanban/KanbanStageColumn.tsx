@@ -113,7 +113,7 @@ export const KanbanStageColumn: React.FC<KanbanStageColumnProps> = ({ stageItem:
       }
 
     return <div className='mx-2 stage-card'>
-        <Card className="h-100" style={{ width: '270px' }}>
+        <Card className="h-100">
             <Card.Title className='p-3 d-flex justify-content-between' style={{ borderBottom: '1px solid #ccc'}}> 
                 <div>{ name } </div>
                 <Dropdown overlay={() => contentMoreOverlay(name)} children={<MoreOutlined />} />

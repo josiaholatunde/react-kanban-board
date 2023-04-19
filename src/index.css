@@ -1,5 +1,5 @@
 @import '~react-toastify/dist/ReactToastify.css';
-
+@import url('./responsiveness.css');
 textarea:focus,
 select:focus,
 .form-control:focus,

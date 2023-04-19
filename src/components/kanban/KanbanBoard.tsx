@@ -85,10 +85,11 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
         // when the app loads or browser is refreshed, initialize kanban stages with default or from local storage
         // should ideally be from a remote server
         dispatch(fetchAllKanbanStages());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
-    return <div className="container my-5 p-0">
+    return <div className="container main-container my-5 p-0">
         <h2>Welcome to Safaricom Kanban board</h2>
            <div className='my-5'>
             <Breadcrumb separator=">">
@@ -98,7 +99,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
            </div>
             <BlockUi blocking={false}>
                 <DndContext collisionDetection={rectIntersection} onDragEnd={handleOnDragEnd}>
-                    <div className='row kaban-stage-container'>
+                    <div className='d-flex flex-wrap kaban-stage-container'>
                         {
                             kabanStages.map((stageItem: any, index: number) => 
                             <KanbanStageColumn key={index} stageItem={stageItem} renameStage={handleRenameStage}  />)
