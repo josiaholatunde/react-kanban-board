@@ -18,7 +18,7 @@ export const KanbanStageTaskItem: React.FC<KanbanStageTaskItemProps> = ({ taskIt
     {...listeners}
     {...attributes}
     ref={setNodeRef}
-    style={{...style, zIndex: 1000}}  >
+    style={{...style}}  >
         <Card.Body className='d-flex align-items-center' style={{height: '3rem'}}>
             <div> { taskItem && taskItem.title }</div>
         </Card.Body>

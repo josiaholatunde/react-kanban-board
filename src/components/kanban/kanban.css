@@ -13,6 +13,7 @@
 .draggable {
     top: auto !important;
     left: auto !important;
+    z-index: 1000;
 }
 
 .add-column {
