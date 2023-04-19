@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { Switch, Route } from 'react-router-dom';
 import KanbanBoard from './components/kanban/KanbanBoard';
 import { ToastContainer } from 'react-toastify';
+import { Footer } from './components/Footer';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/dashboard" component={KanbanBoard} />
           <Route path="/" component={KanbanBoard} />
         </Switch>
+        <Footer />
     </div>
   );
 }

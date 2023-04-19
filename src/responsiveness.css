@@ -7,4 +7,9 @@
     .stage-card .card {
         width: 18.75rem;
     }
+
+    .stage-card {
+        margin-left: 0 !important;
+        
+    }
 }

@@ -50,3 +50,7 @@ input[type="color"]:focus,
 .text-light {
   color: #fff;
 }
+
+.main-footer {
+  font-size: 1rem;
+}
