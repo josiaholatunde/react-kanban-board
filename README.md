@@ -1,9 +1,26 @@
-# Getting Started with Create React App
+# Kanban Board
 
+This Kanban board is an agile project management tool that helps visualize how has work been done. It can help an agile team establish order in their daily work. It uses cards, columns to visualize work been done in an agile team. 
+
+Functional requirements:
+- Ability to create columns in card design format, assign them names, rename and
+delete like shown below.
+- Ability to create tasks within the columns like the below: A user should be able to
+edit and delete as well.
+- Ability to drag and drop tasks from one column to another. For example, in the
+screenshots above, moving Create a reusable button component task to In Progress
+column.
+- The app limits the number of columns or stages that can be added to 5 (which is configurable); Expected Result: The application hides the add column button and issues a message to the user once the 5 columns are exhausted alerting them that they can only create 5 columns.
+- A service worker for the web app that ensures the web app is installable in a mobile or desktop device.
+- Ability for users to create different dynamic stages as well as assign tasks to each stage. 
+- Ability for users to move(drag) tasks across stages to show progress. 
+- Ability for users to rename stages, clear items in a stage as well as delete a stage if no longer required in a workflow. The 
+application confirms or verifies user's intention before carrying out any of these actions
+
+
+
+# Installation Prerequisites:
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
 In the project directory, you can run:
 
 ### `npm start`

@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { KanbanStage } from '../../types/KanbanStage';
+import React, { useEffect, useState } from 'react';
 import { KanbanStageColumn } from './KanbanStageColumn';
 import { DndContext, rectIntersection  } from "@dnd-kit/core";
 import { Card } from 'react-bootstrap';
 import { AddStageColumn } from './AddStageColumn';
 import { connect, ConnectedProps, useDispatch } from 'react-redux';
-import { addCardItemToStage, addNewStage, removeTaskItemFromPreviousStage, renameStage } from '../../redux/actions/kabanStageActions';
+import { addCardItemToStage, addNewStage, fetchAllKanbanStages, removeTaskItemFromPreviousStage, renameStage } from '../../redux/actions/kabanStageActions';
 import { RootState } from '../../redux/store';
+import { Breadcrumb } from 'antd';
 import './kanban.css';
 import { toast } from 'react-toastify';
+import BlockUi from 'react-block-ui';
+
 
 const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
 
@@ -24,7 +26,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
         const taskItemId = e.active.data.current?.id;
         console.log('Omo 2', taskItemTitle, taskItemPrevStage, taskItemId);
 
-        if (!destination) return;
+        if (!destination || destination === taskItemPrevStage) return;
         dispatch(addCardItemToStage(destination, {
             id: taskItemId,
             title: taskItemTitle,
@@ -55,7 +57,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
     }
 
     const doesStageNamePreviouslyExist = (stageName: string): boolean => {
-        return kabanStages.map(stage => stage.name).includes(stageName);
+        return kabanStages.map((stage: any) => stage.name).includes(stageName);
     }
 
     const displayAdditionalKabanContent = () => {
@@ -77,20 +79,31 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
       
     }
 
+    useEffect(() => {
+        dispatch(fetchAllKanbanStages());
+    }, [])
+
 
     return <div className="container my-5">
-        <h2>Welcome to Kanban board</h2>
-           
-            <DndContext collisionDetection={rectIntersection} onDragEnd={handleOnDragEnd}>
-                <div className='d-flex flex-wrap' style={{ rowGap: '1.5rem'}} >
-                    {
-                        kabanStages.map((stageItem, index) => 
-                        <KanbanStageColumn key={index} stageItem={stageItem} renameStage={handleRenameStage}  />)
-                    }
-                    <div> { displayAdditionalKabanContent() } </div>
-                 </div>
-                
-            </DndContext> 
+        <h2>Welcome to Safaricom Kanban board</h2>
+           <div className='my-5'>
+            <Breadcrumb separator=">">
+                <Breadcrumb.Item href="/dashboard">Dashboard</Breadcrumb.Item>
+                <Breadcrumb.Item href="/">Kanban</Breadcrumb.Item>
+            </Breadcrumb>
+           </div>
+            <BlockUi blocking={false}>
+                <DndContext collisionDetection={rectIntersection} onDragEnd={handleOnDragEnd}>
+                    <div className='row' style={{ rowGap: '1.5rem'}} >
+                        {
+                            kabanStages.map((stageItem: any, index: number) => 
+                            <KanbanStageColumn key={index} stageItem={stageItem} renameStage={handleRenameStage}  />)
+                        }
+                        <div> { displayAdditionalKabanContent() } </div>
+                    </div>
+                    
+                </DndContext> 
+            </BlockUi>
           
     </div>
 }
@@ -98,6 +111,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
 
 const mapStateToProps = ({ kabanStages }: RootState) => ({
     kabanStages: kabanStages.kabanStages,
+
 });
 const connector = connect(mapStateToProps);
 type IProps = ConnectedProps<typeof connector>;

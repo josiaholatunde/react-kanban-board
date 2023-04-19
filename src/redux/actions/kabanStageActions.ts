@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { KanbanStage } from '../../types/KanbanStage';
-import { ActionTypes, ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE } from './types';
+import { ActionTypes, ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, KANBAN_LOCAL_STORAGE_KEY, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE, SET_ALL_STAGES } from './types';
 type AuthDispatch<T = unknown, S = unknown> = ThunkDispatch<T, S, Action<ActionTypes>>;
 
 
@@ -46,4 +46,9 @@ export const removeTaskItemFromPreviousStage = (stageName: string, taskItemTitle
         name: stageName,
         taskItemTitle
     }});
+};
+
+export const fetchAllKanbanStages = () => (dispatch: AuthDispatch) => {
+    const kanbanStages = JSON.parse(localStorage.getItem(KANBAN_LOCAL_STORAGE_KEY) || '[]');
+    dispatch({ type: SET_ALL_STAGES, payload: kanbanStages });
 };

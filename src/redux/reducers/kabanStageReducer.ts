@@ -1,7 +1,7 @@
 import { KabanStageReducerState } from "./types/KabanStageReducerState";
 import { PayloadAction } from '@reduxjs/toolkit';
-import { ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE } from "../actions/types";
-
+import { ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, KANBAN_LOCAL_STORAGE_KEY, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE, SET_ALL_STAGES } from "../actions/types";
+import { saveDataToLocalStorage } from "../../util/localStorage";
 
 
 const initialState: KabanStageReducerState = {
@@ -20,18 +20,26 @@ const initialState: KabanStageReducerState = {
 }
 
 export default function (state = initialState, action: PayloadAction<any>) {
-
+    let nextState;
     switch (action.type) {
+        
+        case SET_ALL_STAGES: 
+            nextState = {
+                kabanStages: action.payload || initialState.kabanStages
+            }
+            return nextState;
         case ADD_STAGE:
-            return {
+            nextState= {
                 kabanStages: [...state.kabanStages, action?.payload]
             }
+            saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
+            return nextState;
         case RENAME_STAGE:
             let stageToRenameIndex = state.kabanStages.findIndex(stage => stage.name === action.payload?.previous);
             if (stageToRenameIndex === -1) return state;
             const stageToBeRenamed = state.kabanStages[stageToRenameIndex];
 
-            return {
+            nextState = {
                 kabanStages: [
                     ...state.kabanStages.slice(0, stageToRenameIndex),
                     {
@@ -41,12 +49,14 @@ export default function (state = initialState, action: PayloadAction<any>) {
                     ...state.kabanStages.slice(stageToRenameIndex + 1)
                 ]
             }
+            saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
+            return nextState;
         case CLEAR_STAGE:
             let stageToClearIndex = state.kabanStages.findIndex(stage => stage.name === action.payload?.name);
             if (stageToClearIndex === -1) return state;
             const stageToBeCleared = state.kabanStages[stageToClearIndex];
 
-            return {
+            nextState = {
                 kabanStages: [
                     ...state.kabanStages.slice(0, stageToClearIndex),
                     {
@@ -56,16 +66,19 @@ export default function (state = initialState, action: PayloadAction<any>) {
                     ...state.kabanStages.slice(stageToClearIndex + 1)
                 ]
             }
-
+            saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
+            return nextState;
         case DELETE_STAGE:
             let stageToDeleteIndex = state.kabanStages.findIndex(stage => stage.name === action.payload?.name);
             if (stageToDeleteIndex === -1) return state;
-            return {
+            nextState = {
                 kabanStages: [
                     ...state.kabanStages.slice(0, stageToDeleteIndex),
                     ...state.kabanStages.slice(stageToDeleteIndex + 1)
                 ]
             }
+            saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
+            return nextState;
 
         case ADD_TASK_ITEM_TO_STAGE:
             const currentIndex = state.kabanStages.findIndex(stage => stage.name === action.payload?.name);
@@ -73,7 +86,7 @@ export default function (state = initialState, action: PayloadAction<any>) {
             const currentStage = state.kabanStages[currentIndex];
             const taskItems = [...currentStage?.taskItems || [], action.payload.taskItem];
 
-            return {
+            nextState = {
                 kabanStages: [
                     ...state.kabanStages.slice(0, currentIndex),
                     {
@@ -83,13 +96,15 @@ export default function (state = initialState, action: PayloadAction<any>) {
                     ...state.kabanStages.slice(currentIndex + 1)
                 ]
             }
+            saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
+            return nextState;
         case REMOVE_TASK_ITEM_FROM_STAGE:
             const stageIndex = state.kabanStages.findIndex(stage => stage.name === action.payload?.name);
             if (stageIndex === -1) return state;
             const actualStage = state.kabanStages[stageIndex];
             const itemsWithoutPrevTask = [...actualStage?.taskItems.filter(taskItem => taskItem.title !== action.payload.taskItemTitle)];
 
-            return {
+            nextState = {
                 kabanStages: [
                     ...state.kabanStages.slice(0, stageIndex),
                     {
@@ -99,6 +114,8 @@ export default function (state = initialState, action: PayloadAction<any>) {
                     ...state.kabanStages.slice(stageIndex + 1)
                 ]
             }
+            saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
+            return nextState;
         default:
             return state;
     }
