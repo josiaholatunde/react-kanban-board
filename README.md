@@ -1,6 +1,6 @@
 # Kanban Board
 
-This Kanban board is an agile project management tool that helps visualize how has work been done. It can help an agile team establish order in their daily work. It uses cards, columns to visualize work been done in an agile team. The project with built with React (Typescript template) and Redux (State management). It also uses the browser's local storage API to persist/sync changes within the application.
+This Kanban board is an agile project management tool that helps visualize how has work been done. It can help an agile team establish order in their daily work. It uses cards, columns to visualize work been done in an agile team. The project with built with React (Typescript template) and Redux (State management). It also uses the browser's local storage API to persist/sync changes within the application to prevent data loss during page refresh.
 
 Functional requirements:
 - Ability to create columns in card design format, assign them names, rename and
