@@ -1,6 +1,6 @@
 import { KabanStageReducerState } from "./types/KabanStageReducerState";
 import { PayloadAction } from '@reduxjs/toolkit';
-import { ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, KANBAN_LOCAL_STORAGE_KEY, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE, SET_ALL_STAGES } from "../actions/types";
+import { ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, EDIT_TASK, KANBAN_LOCAL_STORAGE_KEY, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE, SET_ALL_STAGES } from "../actions/types";
 import { saveDataToLocalStorage } from "../../util/localStorage";
 
 
@@ -38,13 +38,14 @@ export default function kabanStageReducer(state = initialState, action: PayloadA
             let stageToRenameIndex = state.kabanStages.findIndex(stage => stage.name === action.payload?.previous);
             if (stageToRenameIndex === -1) return state;
             const stageToBeRenamed = state.kabanStages[stageToRenameIndex];
-
+            const taskItemsWithUpdatedStage = stageToBeRenamed.taskItems.map(taskItem => ({ ...taskItem, currentStage: action?.payload.current}))
             nextState = {
                 kabanStages: [
                     ...state.kabanStages.slice(0, stageToRenameIndex),
                     {
                         ...stageToBeRenamed,
-                        name: action?.payload.current
+                        name: action?.payload.current,
+                        taskItems: taskItemsWithUpdatedStage
                     },
                     ...state.kabanStages.slice(stageToRenameIndex + 1)
                 ]
@@ -116,6 +117,24 @@ export default function kabanStageReducer(state = initialState, action: PayloadA
             }
             saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
             return nextState;
+            case EDIT_TASK:
+                const editTaskIndex = state.kabanStages.findIndex(stage => stage.name === action.payload?.name);
+                if (editTaskIndex === -1) return state;
+                const stageToEdit = state.kabanStages[editTaskIndex];
+                const updatedItems = [...stageToEdit?.taskItems.map(taskItem => taskItem.title === action.payload.previousTaskTitle ? { ...taskItem, title: action.payload.currentTitle} :  taskItem)];
+    
+                nextState = {
+                    kabanStages: [
+                        ...state.kabanStages.slice(0, editTaskIndex),
+                        {
+                            ...stageToEdit,
+                            taskItems: updatedItems
+                        },
+                        ...state.kabanStages.slice(editTaskIndex + 1)
+                    ]
+                }
+                saveDataToLocalStorage(KANBAN_LOCAL_STORAGE_KEY, nextState?.kabanStages);
+                return nextState;
         default:
             return state;
     }

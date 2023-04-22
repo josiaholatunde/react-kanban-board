@@ -7,6 +7,10 @@ export const CLEAR_STAGE = 'CLEAR_STAGE';
 export const DELETE_STAGE = 'DELETE_STAGE';
 export const SET_ALL_STAGES = 'SET_ALL_STAGES';
 
+export const DELETE_TASK = 'DELETE_TASK';
+export const EDIT_TASK = 'EDIT_TASK';
+
+
 export const ADD_TASK_ITEM_TO_STAGE = 'ADD_TASK_ITEM_TO_STAGE'
 export const REMOVE_TASK_ITEM_FROM_STAGE = 'REMOVE_TASK_ITEM_FROM_STAGE'
 
@@ -21,7 +25,10 @@ export type ActionTypes =
     | typeof RENAME_STAGE
     | typeof CLEAR_STAGE
     | typeof DELETE_STAGE
-    | typeof SET_ALL_STAGES;
+    | typeof SET_ALL_STAGES
+    | typeof DELETE_TASK
+    | typeof EDIT_TASK;
+    
 
 
 

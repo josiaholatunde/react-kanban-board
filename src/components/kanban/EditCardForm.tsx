@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import FormInputField from '../form/FormInputField';
 import { toast } from 'react-toastify';
-import { v4 as uuid } from 'uuid';
 
-type AddCardProps = {
-    stageName: string,
-    addCardToStage: (taskItem: any, callBack?: Function) => void
-    handleCancelAddCardToStage: () => void
+type EditCardFormProps = {
+    taskTitle: string,
+    editCard: (previousTitle: string, currentTitle: string, callBack?: Function) => void
+    handleCancelEditCardToStage: () => void
 }
 
-export const AddCard: React.FC<AddCardProps> = ({ addCardToStage, handleCancelAddCardToStage, stageName }) => {
+export const EditCardForm: React.FC<EditCardFormProps> = ({ editCard, handleCancelEditCardToStage, taskTitle }) => {
     const [title, setTitle] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,11 +19,15 @@ export const AddCard: React.FC<AddCardProps> = ({ addCardToStage, handleCancelAd
             toast.error('Fill in the title field')
         } else {
             setIsSubmitting(true);
-            addCardToStage({ title, id:  uuid(), currentStage: stageName }, () => {
-                toast.success('Successfully added card to stage');
+            editCard(taskTitle, title, () => {
+                toast.success('Successfully edited task item');
             })
         }
     }
+
+    useEffect(() => {
+        setTitle(taskTitle);
+    }, [taskTitle])
 
     const isFormInvalid = () => {
         return !title || !title.trim();
@@ -40,9 +43,9 @@ export const AddCard: React.FC<AddCardProps> = ({ addCardToStage, handleCancelAd
                         onChange={(ev) => setTitle(ev.target.value)}
                 />
                 <div className='d-flex justify-content-between align-items-center'>
-                    <div className='primary-text' onClick={handleCancelAddCardToStage}>Cancel</div>
+                    <div className='primary-text' onClick={handleCancelEditCardToStage}>Cancel</div>
                     <Button type="submit" className="custom-btn primary-btn pointer" disabled={isFormInvalid()}>
-                        {!isSubmitting ? 'Add' : <Spinner animation="grow" className="mt-1" /> }
+                        {!isSubmitting ? 'Edit' : <Spinner animation="grow" className="mt-1" /> }
                     </Button>
                 </div>
     </Form>

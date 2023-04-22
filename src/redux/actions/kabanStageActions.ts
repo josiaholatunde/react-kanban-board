@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { KanbanStage } from '../../types/KanbanStage';
-import { ActionTypes, ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, KANBAN_LOCAL_STORAGE_KEY, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE, SET_ALL_STAGES } from './types';
+import { ActionTypes, ADD_STAGE, ADD_TASK_ITEM_TO_STAGE, CLEAR_STAGE, DELETE_STAGE, EDIT_TASK, KANBAN_LOCAL_STORAGE_KEY, REMOVE_TASK_ITEM_FROM_STAGE, RENAME_STAGE, SET_ALL_STAGES } from './types';
 type AuthDispatch<T = unknown, S = unknown> = ThunkDispatch<T, S, Action<ActionTypes>>;
 
 
@@ -41,14 +41,33 @@ export const clearStage = ( stageName: any, callback?: any) => (dispatch: AuthDi
 };
 
 
-export const removeTaskItemFromPreviousStage = (stageName: string, taskItemTitle: any) => (dispatch: AuthDispatch) => {
+export const removeTaskItemFromPreviousStage = (stageName: string, taskItemTitle: any, callback?: any) => (dispatch: AuthDispatch) => {
     dispatch({ type: REMOVE_TASK_ITEM_FROM_STAGE, payload: {
         name: stageName,
         taskItemTitle
     }});
+    if (callback) callback()
 };
 
 export const fetchAllKanbanStages = () => (dispatch: AuthDispatch) => {
     const kanbanStages = JSON.parse(localStorage.getItem(KANBAN_LOCAL_STORAGE_KEY) || '[]');
     dispatch({ type: SET_ALL_STAGES, payload: kanbanStages });
+};
+
+
+export const deleteTask = ( stageName: string, taskName: string, callback?: any) => (dispatch: AuthDispatch) => {
+    dispatch({ type: DELETE_STAGE, payload: {
+       name: stageName
+    }});
+    if (callback) callback()
+};
+
+
+export const editTask = (stageName: string, previousTaskTitle: string, currentTitle: string, callback?: any) => (dispatch: AuthDispatch) => {
+    dispatch({ type: EDIT_TASK, payload: {
+        name: stageName,
+        previousTaskTitle,
+        currentTitle
+    }});
+    if (callback) callback()
 };

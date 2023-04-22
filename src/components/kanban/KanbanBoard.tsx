@@ -23,6 +23,7 @@ const KanbanBoard: React.FC<IProps> = ({ kabanStages }) => {
     const handleOnDragEnd = (e: any) => {
         // get destination stage, check for its validity and add current task item to destination as well as remove same task from existing stage to prevent duplicates
         // also handle edge cases where destination is same as current stage or destination is invalid due to the user moving the mouse out of draggable scope
+        console.log('ropp', e)
         const destination  = e.over?.id;
         const taskItemTitle = e.active.data.current?.title ?? "";
         const taskItemPrevStage = e.active.data.current?.currentStage;

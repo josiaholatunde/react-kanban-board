@@ -19,3 +19,8 @@
 .add-column {
    width: 250px;
 }
+
+.pointer {
+    cursor: pointer;
+    pointer-events: auto;
+}
